@@ -30,7 +30,7 @@ const RecipeSchema = new Schema({
         enum: ['Appetizer', 'Entré', 'Dessert', 'Snack', 'Drink'],
         default: 'Entré'
     }
-
+    //need to add boolean for paid recipe
 });
 
 const Recipe = mongoose.model('Recipe', RecipeSchema);
