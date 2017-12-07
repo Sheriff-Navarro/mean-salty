@@ -60,6 +60,7 @@ router.get('/:id', (req, res) => {
 });
 //RETRIEVE SPECIFIC RECIPE <--END-->
 
+//EDIT A SPECIFIC RECIPE <--START-->
 router.put('/:id', (req, res) =>{
   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({message: 'Requested recipes does not exist'})
@@ -78,9 +79,30 @@ router.put('/:id', (req, res) =>{
     return;
   }
   res.json({
-    message: 'Recipe updated successfully'
+    message: 'Recipe updated successfully',
+    recipe: updates
     });
   });
 });
+//EDIT A SPECIFIC RECIPE <--END-->
+
+//DELETE A SPECIFIC RECIPE <--START-->
+router.delete('/:id', (req, res) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(500).json({ message: 'Requested recipe does not exist'});
+    return;
+  }
+
+  Recipe.remove({_id: req.params.id}, (err) => {
+    if (err) {
+      res.json(err);
+      return;
+    }
+    return res.json({
+      message: 'Recipe has been deleted!'
+    });
+  });
+});
+//DELETE A SPECIFIC RECIPE <--END-->
 
 module.exports = router;
