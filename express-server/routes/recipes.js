@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
     //   type: String,
     //   default: ''
     // },
-    // cookTime: req.body.cookTime
+    cookTime: req.body.cookTime
   });
 
   recipe.save((err) => {
@@ -35,6 +35,20 @@ router.post('/', (req, res) => {
       message: 'New Recipe created!',
       recipe: recipe
     });
+  });
+});
+
+router.get('/:id', (req, res) => {
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({ message: 'Requested recipe does not exist'});
+    return;
+  }
+  Recipe.findById(req.params.id, (err, theRecipe) => {
+    if (err) {
+      res.json(err);
+      return;
+    }
+    res.json(theRecipe);
   });
 });
 
