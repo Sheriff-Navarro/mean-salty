@@ -4,16 +4,19 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+const passport = require('passport')
 const mongoose = require('mongoose');
-require('./configs/database');
-var index = require('./routes/index');
-var users = require('./routes/users');
-var recipes = require('./routes/recipes');
+const index = require('./routes/index');
+const profileRoutes = require('./routes/profile-routes');
+const recipes = require('./routes/recipes');
 const authRoutes = require('./routes/auth-routes');
-// const upload = require('./configs/multer');
 const cors = require('cors');
 const passportSetup = require('./configs/passport-setup');
+const cookieSession = require('cookie-session')
+const keys = require('./configs/keys');
+require('./configs/database');
+
+// const upload = require('./configs/multer');
 
 var app = express();
 app.use(cors());
@@ -28,10 +31,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieSession({
+  maxAge: 24*60*60*1000,
+  keys:[keys.session.cookieKey]
+}))
+//Initializing passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', index);
+app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
-app.use('/users', users);
 app.use('/recipes', recipes);
 
 
