@@ -13,6 +13,7 @@ var recipes = require('./routes/recipes');
 const authRoutes = require('./routes/auth-routes');
 // const upload = require('./configs/multer');
 const cors = require('cors');
+const passportSetup = require('./configs/passport-setup');
 
 var app = express();
 app.use(cors());

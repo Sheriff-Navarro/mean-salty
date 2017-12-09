@@ -4,6 +4,7 @@ logs
 node_modules/
 bower_components/
 .env
+configs/keys.js
 
 
 # Runtime data
