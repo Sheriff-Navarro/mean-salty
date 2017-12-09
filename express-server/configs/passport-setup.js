@@ -14,11 +14,20 @@ passport.use(
   //passport callback function
   console.log('passport callback function fired');
   console.log(profile);
-  new User ({
-    username: profile.displayName,
-    googleId: profile.id
-  }).save().then((newUser) => {
-    console.log('New User Created '+ newUser);
-    })
+  //If User exists log them into existing profile, Else Create the New user
+  User.findOne({googleId:profile.id}).then((currentUser)=>{
+    if(currentUser){
+      //Already have the user
+      console.log('User is ',currentUser)
+    } else{
+       //If not create the user in our db.
+       new User ({
+         username: profile.displayName,
+         googleId: profile.id
+       }).save().then((newUser) =>  {
+         console.log('New User Created '+ newUser);
+         })
+       }//end of else
+     })//end of User.findOne
   })
 )
