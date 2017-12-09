@@ -10,6 +10,7 @@ require('./configs/database');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var recipes = require('./routes/recipes');
+const authRoutes = require('./routes/auth-routes');
 // const upload = require('./configs/multer');
 const cors = require('cors');
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/auth', authRoutes);
 app.use('/users', users);
 app.use('/recipes', recipes);
 
