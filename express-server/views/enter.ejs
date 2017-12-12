@@ -9,8 +9,14 @@
     <nav>
       <ul>
         <li><a href="/">Homepage</a></li>
+        <li><a href="/profile">Profile</a></li>
+
+        <% if (user) {%>
+          <li><a href="/auth/logout">Logout</a></li>
+        <%} else {%>
         <li><a href="/auth/enter">Enter App</a></li>
-        <li><a href="/auth/logout">Logout</a></li>    </ul>
+        <% } %>
+      </ul>
     </nav>
     <h3>login using...</h3>
     <main>

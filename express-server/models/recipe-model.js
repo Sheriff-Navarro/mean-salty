@@ -29,7 +29,10 @@ const RecipeSchema = new Schema({
         type: String,
         enum: ['Appetizer', 'Entré', 'Dessert', 'Snack', 'Drink'],
         default: 'Entré'
-    }
+    },
+  creator: {
+    type: String
+  }
     //need to add boolean for paid recipe
 });
 
