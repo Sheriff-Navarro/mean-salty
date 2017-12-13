@@ -51,7 +51,36 @@ router.post('/', ensureLoggedIn('auth/enter'), (req, res, next) => {
 //CREATE A NEW RECIPE <--END-->
 
 //ADD A Review TO A RECIPE <--START-->
-router.post('/:id/newreview', ensureLoggedIn('auth/enter'), (req, res, next) => {
+// router.post('/:id/newreview',
+//  ensureLoggedIn('auth/enter'), (req, res, next) => {
+//
+//   console.log('user', req.user._id);
+//   console.log('recipe', req.params.id);
+//   const recipeParamId = req.params.id;
+//   const newReview = new Review({
+//     _creator: req.user._id,
+//     recipeId: recipeParamId,
+//     rating: req.body.rating,
+//     review: req.body.review
+//   });
+//   newReview.save((err, recipe) => {
+//     const recipeParamId = req.params.id;
+//     if (err) {
+//       res.render('/recipes', {review: newReview});
+//     } else {
+//     //   res.render(`/recipes/${recipeParamId}`, {review: newReview})
+//     // }
+//     res.render('./recipes/details', {review: newReview})
+//     }
+//   })
+// })
+
+//ADD A Review TO A RECIPE <--START-->
+router.post('/:id/newreview',
+ ensureLoggedIn('auth/enter'), (req, res, next) => {
+   Recipe.findById(req.params.id, (err, theRecipe) => {
+     if (err) {return next(err);}
+
   console.log('user', req.user._id);
   console.log('recipe', req.params.id);
   const recipeParamId = req.params.id;
@@ -61,14 +90,21 @@ router.post('/:id/newreview', ensureLoggedIn('auth/enter'), (req, res, next) => 
     rating: req.body.rating,
     review: req.body.review
   });
-  newReview.save((err) => {
-    if (err) {
-      res.render('./recipes', {review: newReview});
-    } else {
-      res.redirect('./recipes')
-    }
-  })
+  newReview.save((err, theReview) => {
+    const recipeParamId = req.params.id;
+    if (err) {return next(err);}
+     else {
+       const data = {
+         recipe: theRecipe,
+         review: theReview
+       }
+    res.render('./recipes/details', data)
+      }
+    })
+  });
 })
+//ADD A Review TO A RECIPE <--END-->
+
 
 //RETRIEVE SPECIFIC RECIPE <--START-->
 router.get('/:id', (req, res) => {
