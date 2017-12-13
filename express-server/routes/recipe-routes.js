@@ -1,28 +1,38 @@
 var express = require('express');
+const passport = require('passport');
+const {ensureLoggedIn, ensureLoggedOut } = require('connect-ensure-login');
 const Recipe = require('../models/recipe-model');
+const Review = require('../models/review-model');
+const User = require('../models/user-model');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 var router = express.Router();
 //RETRIEVE ALLRECIPES <--START-->
-router.get('/', (req, res, next) => {
-  Recipe.find((err, recipesList) => {
-    if (err) {
-      res.json(err);
-      return;
-    }
-    res.json(recipesList);
-  });
-});
+router.get('/', (req, res, next) =>{
+  Recipe.find({}, (err, recipe) => {
+    if(err) {return next(err) }
+    res.render('recipes/index', {
+      recipe: recipe
+    })
+  })
+})
 //RETRIEVE ALLRECIPES <--END-->
 
+//create a new recipe page <--start-->
+router.get('/new', (req, res) => {
+  res.render('./recipes/new');
+})
+
 //CREATE A NEW RECIPE <--START-->
-router.post('/', (req, res) => {
+router.post('/', ensureLoggedIn('auth/enter'), (req, res, next) => {
   console.log("first log")
-  const recipe = new Recipe({
+  console.log('user', req.user._id)
+  const newRecipe = new Recipe({
+    _creator: req.user._id,
     name: req.body.name,
     cookTime: req.body.cookTime,
     serves: req.body.serves,
-    kindOfDish: req.body.kindOfDish
-
+    kindOfDish: req.body.kindOfDish,
     // ingredients: JSON.parse(req.body.ingredients) || [],
     // directions: JSON.parse(req.body.directions) || [],
     // image: {
@@ -30,19 +40,18 @@ router.post('/', (req, res) => {
     //   default: ''
     // },
   });
-
-  recipe.save((err) => {
+  newRecipe.save((err) => {
     if (err) {
-      res.json(err);
-      return;
+      res.render('.recipes/new', {recipe: newRecipe});
+    } else{
+      res.redirect('./recipes');
     }
-    res.json({
-      message: 'New Recipe created!',
-      recipe: recipe
-    });
   });
 });
 //CREATE A NEW RECIPE <--END-->
+
+//ADD A Review TO A RECIPE <--START-->
+
 
 //RETRIEVE SPECIFIC RECIPE <--START-->
 router.get('/:id', (req, res) => {
@@ -55,10 +64,13 @@ router.get('/:id', (req, res) => {
       res.json(err);
       return;
     }
-    res.json(theRecipe);
+    res.render('./recipes/details', {recipe: theRecipe});
   });
 });
 //RETRIEVE SPECIFIC RECIPE <--END-->
+
+
+
 
 //EDIT A SPECIFIC RECIPE <--START-->
 router.put('/:id', (req, res) =>{
@@ -86,23 +98,33 @@ router.put('/:id', (req, res) =>{
 });
 //EDIT A SPECIFIC RECIPE <--END-->
 
-//DELETE A SPECIFIC RECIPE <--START-->
-router.delete('/:id', (req, res) => {
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(500).json({ message: 'Requested recipe does not exist'});
-    return;
-  }
 
-  Recipe.remove({_id: req.params.id}, (err) => {
-    if (err) {
-      res.json(err);
-      return;
-    }
-    return res.json({
-      message: 'Recipe has been deleted!'
-    });
-  });
-});
+
+//DELETE A SPECIFIC RECIPE <--START-->
+// router.delete('/:id', (req, res) => {
+//   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+//     res.status(500).json({ message: 'Requested recipe does not exist'});
+//     return;
+//   }
+//
+//   Recipe.remove({_id: req.params.id}, (err) => {
+//     if (err) {
+//       res.json(err);
+//       return;
+//     }
+//     return res.json({
+//       message: 'Recipe has been deleted!'
+//     });
+//   });
+// });
+
+router.post('/:id/delete', (req, res, next) => {
+  const recipeId = req.params.id;
+  Recipe.findByIdAndRemove(recipeId, (err, recipe) => {
+    if (err) {return next (err);}
+     res.redirect('/recipes')
+  })
+})
 //DELETE A SPECIFIC RECIPE <--END-->
 
 module.exports = router;

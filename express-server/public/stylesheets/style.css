@@ -28,3 +28,9 @@ main, header{
   padding: 0 10px;
   color: #333;
 }
+
+#box {
+  border-style: solid;
+  border-radius: 1px;
+  border-color: black;
+}

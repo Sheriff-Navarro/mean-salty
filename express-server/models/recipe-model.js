@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./recipe-model')
 const Schema   = mongoose.Schema;
 const RecipeSchema = new Schema({
   name: {
@@ -30,8 +31,11 @@ const RecipeSchema = new Schema({
         enum: ['Appetizer', 'Entré', 'Dessert', 'Snack', 'Drink'],
         default: 'Entré'
     },
-  creator: {
-    type: String
+   _creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+   
+  paidRecipe: {
+    type: Boolean,
+    default: false
   }
     //need to add boolean for paid recipe
 });

@@ -4,7 +4,12 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   username: String,
   googleId: String,
-  thumbnail: String
+  thumbnail: String,
+  fistName: String,
+  lastName: String,
+  savedRecipes: [],
+  paidRecipes: []
+
 });
 
 

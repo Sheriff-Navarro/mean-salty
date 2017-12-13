@@ -1,0 +1,27 @@
+<head>
+  <link rel='stylesheet' href='../stylesheets/style.css' />
+
+</head>
+<body>
+  <a href="/recipes/new">Create a new Recipe</a>
+  <ul>
+    <% recipe.forEach((recipe) => { %>
+      <div class="row">
+        <div class="box" id="box">
+          <h4><%=recipe.name%></h4>
+          <br>
+          <br>
+          <a href="/recipes/<%=recipe._id %>/" role="button" >See Recipe Dtails</a>
+          <br>
+          <br>
+          <form action="/recipes/<%=recipe._id%>/delete" method="post">
+            <button type="submit" name="delete">DELETE RECIPE</button>
+          </form>
+
+          <hr>
+        </div>
+      </div>
+  <br>
+  <% }) %>
+  </ul>
+</body>

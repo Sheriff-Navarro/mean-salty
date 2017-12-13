@@ -1,0 +1,16 @@
+<head>
+  <link rel='stylesheet' href='../stylesheets/style.css' />
+
+</head>
+<body>
+<form action="/recipes" method="POST">
+  <button type="submit">Create a New Recipe</button>
+  <input type="text" name="name" id="name" placeholder="Recipe Name">
+  <% if(typeof(errorMessage) != "undefined") {
+    %>
+    <div class="error-message"><%=errorMessage%> </div>
+  <%}%>
+</form>
+
+
+</body>

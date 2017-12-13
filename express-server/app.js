@@ -8,13 +8,16 @@ const passport = require('passport')
 const mongoose = require('mongoose');
 const index = require('./routes/index');
 const profileRoutes = require('./routes/profile-routes');
-const recipes = require('./routes/recipes');
+const recipeRoutes = require('./routes/recipe-routes');
 const authRoutes = require('./routes/auth-routes');
 const cors = require('cors');
 const passportSetup = require('./configs/passport-setup');
 const cookieSession = require('cookie-session')
 const keys = require('./configs/keys');
+const session = require('express-session');
 require('./configs/database');
+const MongoStore         = require('connect-mongo')(session);
+
 
 // const upload = require('./configs/multer');
 
@@ -35,14 +38,40 @@ app.use(cookieSession({
   maxAge: 24*60*60*1000,
   keys:[keys.session.cookieKey]
 }))
+
+app.use( (req, res, next) => {
+  if (typeof(req.user) !== "undefined"){
+    res.locals.userSignedIn = true;
+  } else {
+    res.locals.userSignedIn = false;
+  }
+  next();
+});
+
+app.use(session({
+  secret: keys.session.cookieKey,
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore( { mongooseConnection: mongoose.connection })
+}));
+
 //Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+// This middleware sets the user variable for all views if logged in so you don't need to add it to the render.
+app.use((req, res, next) => {
+  if (req.user) {
+    res.locals.user = req.user;
+  }
+  next();
+});
+
 app.use('/', index);
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
-app.use('/recipes', recipes);
+app.use('/recipes', recipeRoutes);
+
 
 
 
