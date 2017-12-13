@@ -50,7 +50,7 @@ router.post('/', ensureLoggedIn('auth/enter'), (req, res, next) => {
 });
 //CREATE A NEW RECIPE <--END-->
 
-//ADD A Review TO A RECIPE <--START-->
+//ADD A Review TO A RECIPE WITHOUT PUSHING THE RECIPE BACK TO THE VIEW <--START-->
 // router.post('/:id/newreview',
 //  ensureLoggedIn('auth/enter'), (req, res, next) => {
 //
@@ -106,7 +106,7 @@ router.post('/:id/newreview',
 //ADD A Review TO A RECIPE <--END-->
 
 
-//RETRIEVE SPECIFIC RECIPE <--START-->
+//RETRIEVE SPECIFIC RECIPE ONLY PUSHING THE RECIPE TO THE VIEW <--START-->
 router.get('/:id', (req, res) => {
   console.log('recipe',req.params.id);
   console.log('user',req.user._id)
@@ -124,6 +124,27 @@ router.get('/:id', (req, res) => {
 });
 //RETRIEVE SPECIFIC RECIPE <--END-->
 
+//RETRIEVE SPECIFIC RECIPE PUSHING BOTH RECIPE AND REVIEW TO THE VIEW <--START-->
+// router.get('/:id', (req, res) => {
+//   console.log('recipe',req.params.id);
+//   console.log('user',req.user._id)
+//   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+//     res.status(400).json({ message: 'Requested recipe does not exist'});
+//     return;
+//   }
+//   Recipe.findById(req.params.id, (err, theRecipe) => {
+//     if (err)  {return next(err);}
+//     Review.find({recipeId: req.params.id}, (err, theReview) =>{
+//       if (err) {return next(err);}
+//         const data = {
+//           recipe: theRecipe,
+//           review: theReview
+//         }
+//     res.render('./recipes/details', data);
+//     })
+//   });
+// });
+//RETRIEVE SPECIFIC RECIPE <--END-->
 
 
 
@@ -153,7 +174,7 @@ router.put('/:id', (req, res) =>{
 });
 //EDIT A SPECIFIC RECIPE <--END-->
 
-
+//DELETE A SPECIFIC RECIPE <--START-->
 router.post('/:id/delete', (req, res, next) => {
   //authorize recipe middleware needed
   const recipeId = req.params.id;

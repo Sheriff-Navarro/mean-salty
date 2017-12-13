@@ -1,0 +1,13 @@
+<!--
+
+<% review.forEach((review) => { %>
+  <hr>
+  <div class="row">
+    <div class="box" id="box">
+      <h4></h4>
+      <h4>Rating <%=review.rating%></h4>
+      <h4>Description <%=review.review%></h4>
+    </div>
+    <hr>
+<% }) %>
+</div> -->
