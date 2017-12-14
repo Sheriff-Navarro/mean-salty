@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+  <link rel='stylesheet' href='../stylesheets/style.css' />
+</head>
+<body>
+  <h3>Edit <%=recipe.name%> Recipe</h3>
+  <form  action="/recipes/<%=recipe._id %>/edit" method="POST">
+    <button type="submit" name="Submit">Save Recipe</button>
+    <br>
+    <br>
+    <hr>
+    <label for="name">Recipe Name</label>
+    <input type="text" name="name" value='<%=recipe.name%>'>
+    <br>
+    <br>
+    <label for="name">Serves How Many?</label>
+    <input type="number" name="serves" value='<%=recipe.serves%>'>
+    <br>
+    <br>
+    <label for="name">Cook Time</label>
+    <input type="number" name="cookTime" value='<%=recipe.cookTime%>'>
+
+  </form>
+</body>

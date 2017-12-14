@@ -4,20 +4,19 @@
 
 </head>
 
-
+<% console.log("DATA = ", data); %>
 <body>
+<h1>Recipe Name:<%= data.recipe.name %></h1>
 
-<h1>Recipe Name:<%=  recipe.name %></h1>
+<h2>Recipe CookTime:<%=  data.recipe.cookTime %></h2>
 
-<h2>Recipe CookTime:<%=  recipe.cookTime %></h2>
+<h3> Serves How many<%=data.recipe.serves %></h3>
 
-<h3> Serves How many<%=recipe.serves %></h3>
-
-<a class="btn btn-info" href="/recipe/<%= recipe._id %>/edit" role="button">Edit the Recipe</a>
+<a class="btn btn-info" href="/recipes/<%= data.recipe._id %>/edit" role="button">Edit the Recipe</a>
 
 <br>
 <br>
-<form action="/recipes/<%=recipe._id%>/newreview" method="POST">
+<form action="/recipes/<%=data.recipe._id%>/newreview" method="POST">
   <button type="submit">Create a New Review</button>
   <input type="number" name="rating" id="rating" placeholder="Star Rating 1-5">
   <input type="text" name="review" id="review" placeholder="Write Your Review here!">
@@ -26,6 +25,18 @@
     <div class="error-message"><%=errorMessage%> </div>
   <%}%>
 </form>
+
+<% data.review.forEach((review) => { %>
+  <hr>
+  <div class="row">
+    <div class="box" id="box">
+      <h4></h4>
+      <h4>Rating <%=review.rating%></h4>
+      <h4>Description <%=review.review%></h4>
+    </div>
+    <hr>
+<% }) %>
+
 
 
 

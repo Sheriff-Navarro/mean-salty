@@ -4,6 +4,7 @@ const {ensureLoggedIn, ensureLoggedOut } = require('connect-ensure-login');
 const Recipe = require('../models/recipe-model');
 const Review = require('../models/review-model');
 const User = require('../models/user-model');
+const authorizeRecipe = require('../middleware/recipe-authorization');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var router = express.Router();
@@ -33,12 +34,12 @@ router.post('/', ensureLoggedIn('auth/enter'), (req, res, next) => {
     cookTime: req.body.cookTime,
     serves: req.body.serves,
     kindOfDish: req.body.kindOfDish,
-    // ingredients: JSON.parse(req.body.ingredients) || [],
-    // directions: JSON.parse(req.body.directions) || [],
-    // image: {
-    //   type: String,
-    //   default: ''
-    // },
+    ingredients: JSON.parse(req.body.ingredients) || [],
+    directions: JSON.parse(req.body.directions) || [],
+    image: {
+      type: String,
+      default: ''
+    },
   });
   newRecipe.save((err) => {
     if (err) {
@@ -78,35 +79,39 @@ router.post('/', ensureLoggedIn('auth/enter'), (req, res, next) => {
 //ADD A Review TO A RECIPE <--START-->
 router.post('/:id/newreview',
  ensureLoggedIn('auth/enter'), (req, res, next) => {
-   Recipe.findById(req.params.id, (err, theRecipe) => {
-     if (err) {return next(err);}
-
-  console.log('user', req.user._id);
-  console.log('recipe', req.params.id);
-  const recipeParamId = req.params.id;
-  const newReview = new Review({
-    _creator: req.user._id,
-    recipeId: recipeParamId,
-    rating: req.body.rating,
-    review: req.body.review
+   console.log("NEW REVIEW CODE");
+   // Recipe.findById(req.params.id, (err, theRecipe) => {
+   //   if (err) {return next(err);}
+   //   Review.find({recipeId: req.params.id}, (err, allReviews) =>{
+   //   if(err) {return next(err);}
+     const recipeParamId = req.params.id;
+     const newReview = new Review({
+       _creator: req.user._id,
+       recipeId: recipeParamId,
+       rating: req.body.rating,
+       review: req.body.review
   });
+  console.log("AFTER NEW REVIEW CODE");
   newReview.save((err, theReview) => {
-    const recipeParamId = req.params.id;
+    // const recipeParamId = req.params.id;
     if (err) {return next(err);}
      else {
-       const data = {
-         recipe: theRecipe,
-         review: theReview
-       }
-    res.render('./recipes/details', data)
+       console.log("NO ERROR ON REVIEW CODE");
+       // const data = {
+       //   recipe: theRecipe,
+       //   newReview: theReview,
+       //   reviews: allReviews
+       // }
+       res.redirect('/recipes/' + req.params.id);
       }
-    })
-  });
+      })
+  //   }); //review find by
+  // });
 })
 //ADD A Review TO A RECIPE <--END-->
 
 
-//RETRIEVE SPECIFIC RECIPE ONLY PUSHING THE RECIPE TO THE VIEW <--START-->
+//RETRIEVE SPECIFIC RECIPE PUSHING BOTH RECIPE AND review TO THE VIEW <--START-->
 router.get('/:id', (req, res) => {
   console.log('recipe',req.params.id);
   console.log('user',req.user._id)
@@ -114,42 +119,35 @@ router.get('/:id', (req, res) => {
     res.status(400).json({ message: 'Requested recipe does not exist'});
     return;
   }
+  console.log("BEFORE RECIPE FIND");
   Recipe.findById(req.params.id, (err, theRecipe) => {
-    if (err) {
-      res.json(err);
-      return;
-    }
-    res.render('./recipes/details', {recipe: theRecipe});
+    if (err)  {return next(err);}
+    Review.find({recipeId: req.params.id}, (err, theReview) =>{
+      if (err) {return next(err);}
+        console.log('this is the recipe', theRecipe);
+        console.log('this is the reviews', theReview);
+        const data = {
+          recipe: theRecipe,
+          review: theReview
+        }
+        res.render('./recipes/details', {data: data});
+    })
   });
 });
 //RETRIEVE SPECIFIC RECIPE <--END-->
 
-//RETRIEVE SPECIFIC RECIPE PUSHING BOTH RECIPE AND REVIEW TO THE VIEW <--START-->
-// router.get('/:id', (req, res) => {
-//   console.log('recipe',req.params.id);
-//   console.log('user',req.user._id)
-//   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
-//     res.status(400).json({ message: 'Requested recipe does not exist'});
-//     return;
-//   }
-//   Recipe.findById(req.params.id, (err, theRecipe) => {
-//     if (err)  {return next(err);}
-//     Review.find({recipeId: req.params.id}, (err, theReview) =>{
-//       if (err) {return next(err);}
-//         const data = {
-//           recipe: theRecipe,
-//           review: theReview
-//         }
-//     res.render('./recipes/details', data);
-//     })
-//   });
-// });
-//RETRIEVE SPECIFIC RECIPE <--END-->
-
-
+//GET EDIT VIEW ROUTE <--START-->
+router.get('/:id/edit', ensureLoggedIn('/login'), (req, res, next) =>{
+  const recipeId = req.params.id;
+  Recipe.findById(recipeId, (err, recipe) => {
+    if(err) {return next(err) }
+    res.render('recipes/edit', {recipe: recipe})
+  })
+});
+//GET EDIT VIEW ROUTE <--END-->
 
 //EDIT A SPECIFIC RECIPE <--START-->
-router.put('/:id', (req, res) =>{
+router.post('/:id/edit', ensureLoggedIn('/login'), (req, res) =>{
   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({message: 'Requested recipes does not exist'})
     return;
@@ -158,18 +156,17 @@ router.put('/:id', (req, res) =>{
     name: req.body.name,
     cookTime: req.body.cookTime,
     serves: req.body.serves,
-    kindOfDish: req.body.kindOfDish
+    // kindOfDish: req.body.kindOfDish
   };
 
-  Recipe.findByIdAndUpdate(req.params.id, updates, (err) => {
-  if (err) {
-    res.json(err);
-    return;
-  }
-  res.json({
-    message: 'Recipe updated successfully',
-    recipe: updates
-    });
+  Recipe.findByIdAndUpdate(req.params.id, updates, (err, updatedRecipe) => {
+  if (err){ return next(err);}
+  console.log('recipe id ', updatedRecipe)
+  return res.redirect(`/recipes/${updatedRecipe._id}`)
+  // res.json({
+  //   message: 'Recipe updated successfully',
+  //   recipe: updates
+  //   });
   });
 });
 //EDIT A SPECIFIC RECIPE <--END-->
