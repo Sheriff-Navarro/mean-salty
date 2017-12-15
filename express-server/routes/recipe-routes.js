@@ -9,12 +9,19 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var router = express.Router();
 //RETRIEVE ALLRECIPES <--START-->
+// router.get('/', (req, res, next) =>{
+//   Recipe.find({}, (err, recipe) => {
+//     if(err) {return next(err) }
+//     res.render('recipes/index', {
+//       recipe: recipe
+//     })
+//   })
+// })
+
 router.get('/', (req, res, next) =>{
   Recipe.find({}, (err, recipe) => {
     if(err) {return next(err) }
-    res.render('recipes/index', {
-      recipe: recipe
-    })
+    res.json(recipe)
   })
 })
 //RETRIEVE ALLRECIPES <--END-->

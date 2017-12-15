@@ -2,5 +2,17 @@
   recipe-list works!
 </p>
 
+<h1> Recipe list </h1>
+    <div>
+      <div *ngFor="let recipe of recipes">
+        <h3> {{ recipe.name }} </h3>
+        <h2> {{ recipe.cookTime }} </h2>
+        <h2> {{ recipe.serves }} </h2>
+        <hr>
+
+
+      </div>
+    </div>
+
 
 <a [routerLink]="['recipes', 42]"> View Details </a>

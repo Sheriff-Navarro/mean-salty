@@ -7,7 +7,7 @@ import {FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
-
+import { RecipesService } from './services/recipes.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
 
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [],
+  providers: [RecipesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
