@@ -4,7 +4,6 @@
 
 </head>
 
-<% console.log("DATA = ", data); %>
 <body>
 <h1>Recipe Name:<%= data.recipe.name %></h1>
 
@@ -33,6 +32,9 @@
       <h4></h4>
       <h4>Rating <%=review.rating%></h4>
       <h4>Description <%=review.review%></h4>
+      <h4>Description <%=review.creatorFirst%></h4>
+      <h4>Description <%=review.creatorLast%></h4>
+      <img src="<%=review.creatorThumbnail%>" alt="">
     </div>
     <hr>
 <% }) %>

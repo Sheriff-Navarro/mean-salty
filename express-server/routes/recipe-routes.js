@@ -71,7 +71,11 @@ router.post('/:id/newreview',
      const recipeParamId = req.params.id;
      const newReview = new Review({
        _creator: req.user._id,
-       recipeId: recipeParamId,
+       creatorFirst: req.user.fistName,
+       creatorLast: req.user.lastName,
+       creatorThumbnail: req.user.thumbnail,
+       // recipeId: recipeParamId,
+       recipeId: req.params.id,
        rating: req.body.rating,
        review: req.body.review
   });
@@ -97,22 +101,28 @@ router.get('/:id', (req, res) => {
   Recipe.findById(req.params.id, (err, theRecipe) => {
     if (err)  {return next(err);}
     User.findById({_id: theRecipe._creator}, (err, recipeCreator) => {
+      console.log("creator of the recipe", theRecipe._creator );
+
     if (err) {return next(err);}
     Review.find({recipeId: req.params.id}, (err, theReview) =>{
       if (err) {return next(err);}
-        console.log('this is the recipe', theRecipe);
-        console.log('this is the reviews', theReview);
+    // User.findById({_id: theReview[0]._creator}, (err, reviewCreator) =>{
+    //   console.log("creator", theReview[0]._creator );
+    //   if (err) {return next(err);}
+
         const data = {
           recipe: theRecipe,
           recipeOwner: recipeCreator,
-          review: theReview
+          review: theReview,
+          // reviewOwner: reviewCreator
         }
-        res.json(data)
-        console.log(data);
-      })
+        res.render('recipes/details', {data: data});
+        // res.json(data)
+        })
+      });
     });
   });
-});
+// });
 //RETRIEVE SPECIFIC RECIPE <--END-->
 
 //GET EDIT VIEW ROUTE <--START-->
