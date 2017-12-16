@@ -111,13 +111,11 @@ router.get('/:id', (req, res) => {
           recipeOwner: recipeCreator,
           review: theReview,
         }
-        // res.render('recipes/details', {data: data});
         res.json(data)
         })
       });
     });
   });
-// });
 //RETRIEVE SPECIFIC RECIPE <--END-->
 
 //GET EDIT VIEW ROUTE <--START-->
@@ -156,14 +154,33 @@ router.post('/:id/edit', ensureLoggedIn('/login'), (req, res) =>{
 //EDIT A SPECIFIC RECIPE <--END-->
 
 //DELETE A SPECIFIC RECIPE <--START-->
-router.post('/:id/delete', authorizeRecipe, (req, res, next) => {
-  //authorize recipe middleware needed
-  const recipeId = req.params.id;
-  Recipe.findByIdAndRemove(recipeId, (err, recipe) => {
-    if (err) {return next (err);}
-     res.redirect('/recipes')
+// router.post('/:id/delete', (req, res, next) => {
+//   //authorize recipe middleware needed
+//   const recipeId = req.params.id;
+//   Recipe.findByIdAndRemove(recipeId, (err, recipe) => {
+//     if (err) {return next (err);}
+//      res.redirect('/recipes')
+//   })
+// })
+
+router.delete('/:id', (req, res) => {
+  console.log(req.params.id);
+  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
+
+  Recipe.remove({ _id: req.params.id }, (err) => {
+    if (err) {
+      res.json(err);
+      return;
+    }
+
+    return res.json({
+      message: 'Recipe has been removed!'
+    });
   })
-})
+});
 //DELETE A SPECIFIC RECIPE <--END-->
 
 module.exports = router;

@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RecipesService } from '../services/recipes.service';
+
+
+
+
 
 @Component({
   selector: 'app-recipe-details',
@@ -12,6 +16,7 @@ export class RecipeDetailsComponent implements OnInit {
   recipe: any;
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private recipesService: RecipesService
   ) { }
@@ -29,6 +34,16 @@ export class RecipeDetailsComponent implements OnInit {
          this.recipe = recipe;
        });
    }
+
+   deleteRecipe() {
+  // if (window.confirm('Are you sure?')) {
+    console.log("recipe details ", this.recipe.recipe._id)
+    this.recipesService.remove(this.recipe.recipe._id)
+      .subscribe(() => {
+        this.router.navigate(['recipes']);
+      });
+  // }
+}
 
 
   }

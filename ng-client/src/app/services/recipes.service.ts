@@ -30,6 +30,15 @@ export class RecipesService {
     .map((res) => res.json());
   }
 
+  // remove(id) {
+  //     return this.http.delete(`${this.BASE_URL}/recipes/${id}`)
+  //       .map((res) => res.json());
+  //   }
+
+remove(id) {
+  return this.http.delete(`${this.BASE_URL}/recipes/${id}`)
+    .map((res) => res.json());
+}
 
 
 }
