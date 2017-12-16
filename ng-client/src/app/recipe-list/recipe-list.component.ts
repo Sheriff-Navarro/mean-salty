@@ -9,15 +9,20 @@ import { RecipesService } from '../services/recipes.service';
   providers: [RecipesService]
 })
 export class RecipeListComponent implements OnInit {
-  recipes;
-
+  recipes
   constructor(private recipe: RecipesService) { }
 
   ngOnInit() {
     this.recipe.getList()
-      .subscribe((recipes) => {
+      .subscribe((recipes) =>{
         this.recipes = recipes;
       })
+
+      // this.user.getList()
+      // .subscribe((user) => {
+      //   this.users = users;
+      // })
+
   }
 
 }

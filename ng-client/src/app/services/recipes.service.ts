@@ -15,8 +15,10 @@ export class RecipesService {
   }
 
   get(id) {
-    return this.http.get(`${this.BASE_URL}/recipes/${id}`)
+    var temp = this.http.get(`${this.BASE_URL}/recipes/${id}`)
       .map((res) => res.json());
+      //console.log('RES = ', temp);
+    return temp;
   }
 
   getEdit(id) {

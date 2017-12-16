@@ -5,14 +5,12 @@
 <h1> Recipe list </h1>
     <div>
       <div *ngFor="let recipe of recipes">
-        <h3> {{ recipe.name }} </h3>
-        <h2> {{ recipe.cookTime }} </h2>
-        <h2> {{ recipe.serves }} </h2>
-        <hr>
+        <h3> Recipe{{ recipe.name }} </h3>
+        <h2> Cook Time: {{ recipe.cookTime }} </h2>
+        <h2> Serves: {{ recipe.serves }} </h2>
+        <a [routerLink]="['recipes', recipe._id]"> View Details </a>
 
+        <hr>
 
       </div>
     </div>
-
-
-<a [routerLink]="['recipes', 42]"> View Details </a>

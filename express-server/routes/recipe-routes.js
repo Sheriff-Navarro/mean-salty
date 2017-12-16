@@ -9,22 +9,30 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var router = express.Router();
 //RETRIEVE ALLRECIPES <--START-->
-// router.get('/', (req, res, next) =>{
-//   Recipe.find({}, (err, recipe) => {
-//     if(err) {return next(err) }
-//     res.render('recipes/index', {
-//       recipe: recipe
-//     })
-//   })
-// })
-
 router.get('/', (req, res, next) =>{
   Recipe.find({}, (err, recipe) => {
     if(err) {return next(err) }
     res.json(recipe)
+    console.log(recipe)
   })
 })
 //RETRIEVE ALLRECIPES <--END-->
+
+// router.get('/', (req, res, next) =>{
+//   Recipe.find({}, (err, theRecipe) => {
+//     if(err) {return next(err) }
+//     User.find({}, (err, theUser)=>{
+//     if(err) { return next (err)}
+//     const data = {
+//       recipe: theRecipe,
+//       user: theUser
+//     }
+//     res.json(data)
+//     console.log(data)
+//     })
+//   })
+// })
+
 
 //create a new recipe page <--start-->
 router.get('/new', (req, res) => {
@@ -80,7 +88,7 @@ router.post('/:id/newreview',
 //RETRIEVE SPECIFIC RECIPE PUSHING BOTH RECIPE AND review TO THE VIEW <--START-->
 router.get('/:id', (req, res) => {
   console.log('recipe',req.params.id);
-  console.log('user',req.user._id)
+  // console.log('user',req.user._id)
   if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Requested recipe does not exist'});
     return;
@@ -88,16 +96,21 @@ router.get('/:id', (req, res) => {
   console.log("BEFORE RECIPE FIND");
   Recipe.findById(req.params.id, (err, theRecipe) => {
     if (err)  {return next(err);}
+    User.findById({_id: theRecipe._creator}, (err, recipeCreator) => {
+    if (err) {return next(err);}
     Review.find({recipeId: req.params.id}, (err, theReview) =>{
       if (err) {return next(err);}
         console.log('this is the recipe', theRecipe);
         console.log('this is the reviews', theReview);
         const data = {
           recipe: theRecipe,
+          recipeOwner: recipeCreator,
           review: theReview
         }
-        res.render('./recipes/details', {data: data});
-    })
+        res.json(data)
+        console.log(data);
+      })
+    });
   });
 });
 //RETRIEVE SPECIFIC RECIPE <--END-->

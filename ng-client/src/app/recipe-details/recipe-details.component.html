@@ -1,5 +1,21 @@
-<p>
-  recipe-details works!
-</p>
+<h1> Phone details </h1>
+    <a [routerLink]="['']"> Back to list </a>
 
-<a [routerLink]="['']"> Back to list </a>
+    <div *ngIf="recipe">
+
+      <div class="recipe-info">
+        <h1> Recipe Name {{ recipe.recipe.name }}&nbsp;</h1>
+        <h1>  Name {{ recipe.recipeOwner.fistName }}&nbsp;</h1>
+        <h3> Cook Time {{ recipe.recipe.cookTime }} </h3>
+        <h3> Serves {{ recipe.recipe.serves }} </h3>
+      </div>
+      <hr>
+      <hr>
+
+
+      <div *ngFor="let review of recipe.review">
+        <h2> Review {{ review.review }}&nbsp;</h2>
+        <h2> Rating {{ review.rating }}&nbsp;</h2>
+        <hr>
+    </div>
+  </div>
