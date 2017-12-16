@@ -102,22 +102,17 @@ router.get('/:id', (req, res) => {
     if (err)  {return next(err);}
     User.findById({_id: theRecipe._creator}, (err, recipeCreator) => {
       console.log("creator of the recipe", theRecipe._creator );
-
     if (err) {return next(err);}
     Review.find({recipeId: req.params.id}, (err, theReview) =>{
       if (err) {return next(err);}
-    // User.findById({_id: theReview[0]._creator}, (err, reviewCreator) =>{
-    //   console.log("creator", theReview[0]._creator );
-    //   if (err) {return next(err);}
 
         const data = {
           recipe: theRecipe,
           recipeOwner: recipeCreator,
           review: theReview,
-          // reviewOwner: reviewCreator
         }
-        res.render('recipes/details', {data: data});
-        // res.json(data)
+        // res.render('recipes/details', {data: data});
+        res.json(data)
         })
       });
     });

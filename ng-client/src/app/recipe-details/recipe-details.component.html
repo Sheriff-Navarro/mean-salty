@@ -19,6 +19,11 @@
       <div *ngFor="let review of recipe.review">
         <h2> Review {{ review.review }}&nbsp;</h2>
         <h2> Rating {{ review.rating }}&nbsp;</h2>
+        <h2> Review Creator {{ review.creatorFirst }} {{ review.creatorLast }}&nbsp;</h2>
+        <div class="phone-thumbnail">
+        <img height="50" [src]="review.creatorThumbnail" />
+        </div>
+
         <hr>
     </div>
   </div>
