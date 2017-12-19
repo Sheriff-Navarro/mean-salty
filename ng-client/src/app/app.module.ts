@@ -8,12 +8,15 @@ import { AppComponent } from './app.component';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
 import { RecipesService } from './services/recipes.service';
+import { SessionService} from './services/session.service';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RecipeListComponent,
-    RecipeDetailsComponent
+    RecipeDetailsComponent,
+    AuthenticationComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,7 @@ import { RecipesService } from './services/recipes.service';
 
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [RecipesService],
+  providers: [RecipesService, SessionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
