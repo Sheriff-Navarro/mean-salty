@@ -1,0 +1,25 @@
+<h1> Authentication Sample </h1>
+<form *ngIf="!user" (ngSubmit)="signup()">
+  <h2> Signup </h2>
+  <label> Username </label>
+  <input type="text" [(ngModel)]="formInfo.username" name="username"/>
+  <br>
+  <label> Password </label>
+  <input type="password" [(ngModel)]="formInfo.password" name="password"/>
+  <br>
+  <label> Full Name </label>
+  <input type="text" [(ngModel)]="formInfo.fullName" name="fullName"/>
+  <br>
+
+
+  <!-- <button (click)="login()"> login </button> -->
+  <button > signup </button>
+</form>
+<p class="error"> {{ error }} </p>
+
+
+<div *ngIf="user">
+  <h2> You are now logged in as {{ user.username }}!! </h2>
+  <p> Here's the user object </p>
+  <pre> {{ user | json }} </pre>
+</div>

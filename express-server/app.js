@@ -15,9 +15,9 @@ const passportSetup = require('./configs/passport-setup');
 const cookieSession = require('cookie-session')
 const keys = require('./configs/keys');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 require('./configs/database');
-const MongoStore         = require('connect-mongo')(session);
-
+// passportSetup(passport);
 
 // const upload = require('./configs/multer');
 
@@ -34,10 +34,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieSession({
-  maxAge: 24*60*60*1000,
-  keys:[keys.session.cookieKey]
-}))
+// app.use(cookieSession({
+//   maxAge: 24*60*60*1000,
+//   keys:[keys.session.cookieKey]
+// }))
 
 app.use( (req, res, next) => {
   if (typeof(req.user) !== "undefined"){
@@ -50,9 +50,10 @@ app.use( (req, res, next) => {
 
 app.use(session({
   secret: keys.session.cookieKey,
-  resave: false,
+  resave: true,
   saveUninitialized: true,
-  store: new MongoStore( { mongooseConnection: mongoose.connection })
+  store: new MongoStore( { mongooseConnection: mongoose.connection }),
+  cookie: { httponly: true, maxAge: 2419200000}
 }));
 
 //Initializing passport
@@ -68,17 +69,21 @@ app.use((req, res, next) => {
 });
 
 // Set CORS here
-app.use(function(req, res, next) {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      next();
-});
+app.use(cors({
+  credentials: true,
+  origin: [ 'http://localhost:4200']
+}));
 
 app.use('/', index);
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
 app.use('/recipes', recipeRoutes);
 
+//Using a client application
+
+app.use((req, res, next) => {
+  res.sendfile(__dirname + '/public/index.html');
+});
 
 
 

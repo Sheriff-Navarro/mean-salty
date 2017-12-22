@@ -10,13 +10,17 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
 import { RecipesService } from './services/recipes.service';
 import { SessionService} from './services/session.service';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { SignupComponent } from './signup/signup.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RecipeListComponent,
     RecipeDetailsComponent,
-    AuthenticationComponent
+    AuthenticationComponent,
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -10,7 +10,7 @@ import { SessionService } from '../services/session.service';
 export class AuthenticationComponent implements OnInit {
   user: any;
   error: string;
-
+  formInfo: any;
   constructor(
     private session: SessionService,
     private router: Router,
@@ -29,11 +29,11 @@ export class AuthenticationComponent implements OnInit {
   }
 
   login() {
-    this.session.login()
-    .subscribe(
-      (user) => this.successCb(user),
-      (err) => this.errorCb(err)
-    );
+    this.session.login(this.formInfo)
+      .subscribe(
+        (user) => this.successCb(user),
+        (err) => this.errorCb(err)
+      );
   }
 
 errorCb(err) {
